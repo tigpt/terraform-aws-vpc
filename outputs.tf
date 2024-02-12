@@ -2,6 +2,7 @@ locals {
   redshift_route_table_ids = aws_route_table.redshift[*].id
   public_route_table_ids   = aws_route_table.public[*].id
   private_route_table_ids  = aws_route_table.private[*].id
+  tgw_route_table_ids      = aws_route_table.tgw[*].id
 }
 
 ################################################################################
@@ -210,6 +211,50 @@ output "private_network_acl_arn" {
 }
 
 ################################################################################
+# TGW Subnets
+################################################################################
+
+output "tgw_subnets" {
+  description = "List of IDs of tgw subnets"
+  value       = aws_subnet.tgw[*].id
+}
+
+output "tgw_subnet_arns" {
+  description = "List of ARNs of tgw subnets"
+  value       = aws_subnet.tgw[*].arn
+}
+
+output "tgw_subnets_cidr_blocks" {
+  description = "List of cidr_blocks of tgw subnets"
+  value       = compact(aws_subnet.tgw[*].cidr_block)
+}
+
+output "tgw_subnets_ipv6_cidr_blocks" {
+  description = "List of IPv6 cidr_blocks of tgw subnets in an IPv6 enabled VPC"
+  value       = compact(aws_subnet.tgw[*].ipv6_cidr_block)
+}
+
+output "tgw_route_table_ids" {
+  description = "List of IDs of tgw route tables"
+  value       = local.tgw_route_table_ids
+}
+
+output "tgw_route_table_association_ids" {
+  description = "List of IDs of the tgw route table association"
+  value       = aws_route_table_association.tgw[*].id
+}
+
+output "tgw_network_acl_id" {
+  description = "ID of the tgw network ACL"
+  value       = try(aws_network_acl.tgw[0].id, null)
+}
+
+output "tgw_network_acl_arn" {
+  description = "ARN of the tgw network ACL"
+  value       = try(aws_network_acl.tgw[0].arn, null)
+}
+
+################################################################################
 # Outpost Subnets
 ################################################################################
 
@@ -403,7 +448,7 @@ output "elasticache_subnet_group_name" {
 
 output "elasticache_route_table_ids" {
   description = "List of IDs of elasticache route tables"
-  value       = try(coalescelist(aws_route_table.elasticache[*].id, local.private_route_table_ids), [])
+  value       = try(coalescelist(aws_route_table.elasticache[*].id, local.private_route_table_ids, local.tgw_route_table_ids), [])
 }
 
 output "elasticache_route_table_association_ids" {
