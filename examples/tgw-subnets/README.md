@@ -1,6 +1,6 @@
-# Simple VPC
+# Simple VPC with Transit Gateway and routes to TGW
 
-Configuration in this directory creates set of VPC resources which may be sufficient for development environment.
+Configuration in this directory creates set of VPC resources plus a Transit Gateway and connects them by enabling to rout traffic to TGW. It also creates TGW subnets for the TGW endpoints attachments.
 
 There is a public and private subnet created per availability zone in addition to single NAT Gateway shared between all 3 availability zones.
 
