@@ -256,7 +256,7 @@ output "tgw_network_acl_arn" {
 
 output "aws_ec2_transit_gateway_vpc_attachment_id" {
   description = "ID of the TGW attachment"
-  value       = try(aws_ec2_transit_gateway_vpc_attachment.tgw.id, null)
+  value       = try(aws_ec2_transit_gateway_vpc_attachment.tgw[0].id, null)
 }
 
 ################################################################################
