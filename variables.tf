@@ -428,6 +428,12 @@ variable "private_acl_tags" {
 # TGW Subnets
 ################################################################################
 
+variable "enable_tgw_attachment" {
+  description = "Enable Transit Gateway Attachment"
+  type        = bool
+  default     = false
+}
+
 variable "tgw_subnets" {
   description = "A list of tgw subnets inside the VPC"
   type        = list(string)

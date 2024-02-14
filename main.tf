@@ -1233,7 +1233,7 @@ resource "aws_route" "private_dns64_nat_gateway" {
 
 # Transit Gateway VPC attachment
 resource "aws_ec2_transit_gateway_vpc_attachment" "tgw" {
-  count = var.transit_gateway_id == null ? 0 : 1
+  count = var.enable_tgw_attachment ? 0 : 1
 
   subnet_ids         = aws_subnet.tgw[*].id
   transit_gateway_id = var.transit_gateway_id

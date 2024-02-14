@@ -41,6 +41,7 @@ module "vpc" {
     intra   = "10.0.0.0/8"
   }
 
+  enable_tgw_attachment  = true
   enable_nat_gateway     = true
   enable_tgw_nat_gateway = true
   single_nat_gateway     = false
