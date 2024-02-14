@@ -254,6 +254,11 @@ output "tgw_network_acl_arn" {
   value       = try(aws_network_acl.tgw[0].arn, null)
 }
 
+output "aws_ec2_transit_gateway_vpc_attachment_id" {
+  description = "ID of the TGW attachment"
+  value       = try(aws_ec2_transit_gateway_vpc_attachment.tgw.id, null)
+}
+
 ################################################################################
 # Outpost Subnets
 ################################################################################
