@@ -1309,6 +1309,19 @@ resource "aws_route" "intra_to_tgw" {
   depends_on = [ aws_ec2_transit_gateway_vpc_attachment.tgw ]
 }
 
+# Route: IPv4 routes from public subnets to the Transit Gateway (if configured in var.transit_gateway_routes)
+resource "aws_route" "database_to_tgw" {
+  count = (local.create_database_subnets && contains(local.subnets_tgw_routed, "database")) ? length(var.azs) : 0
+
+  destination_cidr_block     = can(regex("^pl-", var.transit_gateway_routes["database"])) ? null : var.transit_gateway_routes["database"]
+  destination_prefix_list_id = can(regex("^pl-", var.transit_gateway_routes["database"])) ? var.transit_gateway_routes["database"] : null
+
+  transit_gateway_id = var.transit_gateway_id
+  route_table_id     = element(aws_route_table.database[*].id, count.index)
+
+  depends_on = [ aws_ec2_transit_gateway_vpc_attachment.tgw ]
+}
+
 ################################################################################
 # Customer Gateways
 ################################################################################
