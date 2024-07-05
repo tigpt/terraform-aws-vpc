@@ -1254,7 +1254,7 @@ resource "aws_route" "tgw_nat_gateway" {
   timeouts {
     create = "5m"
   }
-  depends_on = [ aws_ec2_transit_gateway_vpc_attachment.tgw ]
+  depends_on = [aws_ec2_transit_gateway_vpc_attachment.tgw]
 }
 
 resource "aws_route" "tgw_dns64_nat_gateway" {
@@ -1267,12 +1267,12 @@ resource "aws_route" "tgw_dns64_nat_gateway" {
   timeouts {
     create = "5m"
   }
-  depends_on = [ aws_ec2_transit_gateway_vpc_attachment.tgw ]
+  depends_on = [aws_ec2_transit_gateway_vpc_attachment.tgw]
 }
 
 # Route: IPv4 routes from public subnets to the Transit Gateway (if configured in var.transit_gateway_routes)
 resource "aws_route" "public_to_tgw" {
-  count = (local.create_public_subnets && contains(local.subnets_tgw_routed, "public")) ? length(var.azs) : 0
+  count = (local.create_public_subnets && contains(local.subnets_tgw_routed, "public")) ? (var.enable_nat_gateway ? length(var.azs) : 1) : 0
 
   destination_cidr_block     = can(regex("^pl-", var.transit_gateway_routes["public"])) ? null : var.transit_gateway_routes["public"]
   destination_prefix_list_id = can(regex("^pl-", var.transit_gateway_routes["public"])) ? var.transit_gateway_routes["public"] : null
@@ -1280,7 +1280,7 @@ resource "aws_route" "public_to_tgw" {
   transit_gateway_id = var.transit_gateway_id
   route_table_id     = element(aws_route_table.public[*].id, count.index)
 
-  depends_on = [ aws_ec2_transit_gateway_vpc_attachment.tgw ]
+  depends_on = [aws_ec2_transit_gateway_vpc_attachment.tgw]
 }
 
 # Route: IPv4 routes from private subnets to the Transit Gateway (if configured in var.transit_gateway_routes)
@@ -1293,7 +1293,7 @@ resource "aws_route" "private_to_tgw" {
   transit_gateway_id = var.transit_gateway_id
   route_table_id     = element(aws_route_table.private[*].id, count.index)
 
-  depends_on = [ aws_ec2_transit_gateway_vpc_attachment.tgw ]
+  depends_on = [aws_ec2_transit_gateway_vpc_attachment.tgw]
 }
 
 # Route: IPv4 routes from intra subnets to the Transit Gateway (if configured in var.transit_gateway_routes)
@@ -1306,7 +1306,7 @@ resource "aws_route" "intra_to_tgw" {
   transit_gateway_id = var.transit_gateway_id
   route_table_id     = element(aws_route_table.intra[*].id, count.index)
 
-  depends_on = [ aws_ec2_transit_gateway_vpc_attachment.tgw ]
+  depends_on = [aws_ec2_transit_gateway_vpc_attachment.tgw]
 }
 
 # Route: IPv4 routes from public subnets to the Transit Gateway (if configured in var.transit_gateway_routes)
@@ -1319,7 +1319,7 @@ resource "aws_route" "database_to_tgw" {
   transit_gateway_id = var.transit_gateway_id
   route_table_id     = element(aws_route_table.database[*].id, count.index)
 
-  depends_on = [ aws_ec2_transit_gateway_vpc_attachment.tgw ]
+  depends_on = [aws_ec2_transit_gateway_vpc_attachment.tgw]
 }
 
 ################################################################################
